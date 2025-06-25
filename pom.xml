@@ -31,7 +31,7 @@
         <dependency>
             <groupId>io.github.Kloping</groupId>
             <artifactId>JvUtils</artifactId>
-            <version>0.4.7</version>
+            <version>0.4.9-R3</version>
         </dependency>
         <dependency>
             <groupId>net.mamoe</groupId>
