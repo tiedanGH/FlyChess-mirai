@@ -1,0 +1,39 @@
+name: Build Snapshot
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build with Maven
+        run: |
+          echo "SHA=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+          mvn -B clean package
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: FlyChess-mirai-${{ env.SHA }}
+          path: target/*.jar
+          if-no-files-found: error
